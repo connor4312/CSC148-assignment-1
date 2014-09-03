@@ -40,21 +40,29 @@ class Database(Transactor):
 
         # Otherwise, it's a dict to match!
         out = []
-        for id, item in self.current_collection.items():
+        for iid, item in self.current_collection.items():
             if self._dict_matches(item, attr):
-                out.append(id)
+                out.append(iid)
 
         return out
 
-    def _get_record_for(self, id):
-        return self.current_collection[id]
+    def _get_record_for(self, iid, include_id):
+        record = copy.copy(self.current_collection[iid])
+
+        if include_id:
+            record['iid'] = iid
+
+        return record
+
+    def has_collection(self, name):
+        return name in self.data
 
     def set_collection(self, name):
         """
         Sets a collection from the "database", creating one if it
         does not already exist.
         """
-        if not name in self.data:
+        if not self.has_collection(name):
             self.data[name] = {}
 
         self.collection_key = name
@@ -62,7 +70,7 @@ class Database(Transactor):
 
         return self
 
-    def add(self, data=None, id=None, **kwargs):
+    def add(self, data=None, iid=None, **kwargs):
         """
         Adds an item to the collection. Takes a dict to add, an array
         of dicts, to add, or data as keyword arguments. Returns an
@@ -73,21 +81,21 @@ class Database(Transactor):
             return [self.add(d) for d in data]
 
         # Generate a UUID
-        if id is None:
-            id = uuid.uuid4().hex
+        if iid is None:
+            iid = uuid.uuid4().hex
 
         # Add the keyword args or data, depending on which we're using.
         if data is None:
-            self.current_collection[id].append(kwargs)
+            self.current_collection[iid].append(kwargs)
         else:
             # Copy the data to prevent strange reference issues...
-            self.current_collection[id] = copy.copy(data)
+            self.current_collection[iid] = copy.copy(data)
 
         # Add an undo action
         key = self.collection_key
-        self.add_action(lambda: self.set_collection(key).remove(id))
+        self.add_action(lambda: self.set_collection(key).remove(iid))
 
-        return id
+        return iid
 
     def remove(self, attr):
         """
@@ -96,30 +104,30 @@ class Database(Transactor):
         """
 
         recs = []
-        for id in self._find_ids(attr):
-            keep = self.current_collection[id]
-            self.add_action(lambda id=id, keep=keep: self.set_collection(key).add(keep, id))
+        for iid in self._find_ids(attr):
+            keep = self.current_collection[iid]
+            self.add_action(lambda iid=iid, keep=keep: self.set_collection(key).add(keep, iid))
 
             recs.append(keep)
 
-            del self.current_collection[id]
+            del self.current_collection[iid]
 
         key = self.collection_key
 
-    def update(self, id, data=None, **kwargs):
+    def update(self, iid, data=None, **kwargs):
         """
         Updates an existing item. Returns false if the record didn't exist,
         true otherwise.
         """
-        if id not in self.current_collection:
+        if iid not in self.current_collection:
             return False
 
-        record = self.current_collection[id]
+        record = self.current_collection[iid]
 
         # Save the current collection to "reverse"
         key = self.collection_key
         record_copy = copy.copy(record)
-        self.add_action(lambda: self.set_collection(key).update(id, record_copy))
+        self.add_action(lambda: self.set_collection(key).update(iid, record_copy))
 
         # If the data is none, assume we're being given keyworded arguments
         if data is None:
@@ -130,7 +138,23 @@ class Database(Transactor):
 
         return True
 
-    def find(self, attr):
+    def crupdate(self, attr, data=None):
+        """
+        If a model with the given attr rules (see find()) is in the collection
+        then update it. Otherwise, create it.
+        """
+        if data is None:
+            data = attr
+
+        records = self._find_ids(attr)
+        if len(records) == 0:
+            return self.add(data)
+
+        self.update(records[0], data)
+
+        return records[0]
+
+    def find(self, attr={}, include_id=False):
         """
         Attempts to find the given item in the collection. If attr is a
         string, assume it's a UUID. Otherwise, match it against a dict.
@@ -140,17 +164,19 @@ class Database(Transactor):
 
         Returns an array of dicts.
         """
+        return map(lambda r: self._get_record_for(r, include_id), self._find_ids(attr))
 
-        return map(self._get_record_for, self._find_ids(attr))
-
-    def find_one(self, attr):
+    def find_one(self, attr, include_id=False):
         """
-        Same as "find", but returns a single dict or false, rather
+        Same as "find", but returns a single dict or None, rather
         than an array.
         """
         data = self._find_ids(attr)
 
-        return False if not len(data) else self.current_collection[data[0]]
+        if not len(data):
+            return None
+
+        return self._get_record_for(data.pop(), include_id)
 
     def __getattr__(self, name):
         """
@@ -163,3 +189,5 @@ class Database(Transactor):
         self.set_collection(name)
 
         return self
+
+db = Database()

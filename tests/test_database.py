@@ -30,6 +30,7 @@ class DatabaseTestCase(unittest.TestCase):
         self.db.start_transaction()
         id = self.db.foos.add({'bar': True})
         self.assertEqual(item, self.db.foos.find_one(id))
+        self.assertEqual(id, self.db.foos.find_one(id, include_id=True)['id'])
         self.db.end_transaction()
 
         self.assertEqual(False, self.db.foos.find_one(id))
@@ -53,19 +54,19 @@ class DatabaseTestCase(unittest.TestCase):
 
         self.db.start_transaction()
         self.db.foos.remove(id)
-        self.assertEqual(False, self.db.foos.find_one(id))
+        self.assertEqual(None, self.db.foos.find_one(id))
         self.db.end_transaction()
 
         self.db.undo()
         print(self.db.foos.find_one({}))
-        self.assertNotEqual(False, self.db.foos.find_one(id))
+        self.assertNotEqual(None, self.db.foos.find_one(id))
 
     def test_updates(self):
         id = self.db.foos.add({'bar': True})
 
         self.db.start_transaction()
         self.db.foos.update(id, {'bar': False})
-        # self.assertEqual(False, self.db.foos.find_one(id)['bar'])
+        self.assertEqual(False, self.db.foos.find_one(id)['bar'])
         self.db.end_transaction()
 
         self.db.undo()
