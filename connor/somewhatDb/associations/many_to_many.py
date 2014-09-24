@@ -27,6 +27,7 @@ class ManyToMany:
         """
         Creates a dict linking the parent model to the child.
         """
+
         return {
             self.parent.__class__.__name__: self.parent.get_id(),
             self.child.__name__: model.get_id()
@@ -55,7 +56,8 @@ class ManyToMany:
         Finds all owned relations.
         """
         out = []
-        for record in self.db().find():
+        attr = {self.parent.__class__.__name__: self.parent.get_id()}
+        for record in self.db().find(attr):
             out.append(self.child.find_one(record[self.child.__name__]))
 
         return out

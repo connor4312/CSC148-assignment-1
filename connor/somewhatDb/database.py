@@ -18,7 +18,7 @@ class Database(Transactor):
         and that they are equal.
         """
         for key, value in against.items():
-            if not key in compare or compare[key] != value:
+            if key not in compare or compare[key] != value:
                 return False
 
         return True
@@ -106,7 +106,8 @@ class Database(Transactor):
         recs = []
         for iid in self._find_ids(attr):
             keep = self.current_collection[iid]
-            self.add_action(lambda iid=iid, keep=keep: self.set_collection(key).add(keep, iid))
+            self.add_action(lambda iid=iid, keep=keep: self
+                            .set_collection(key).add(keep, iid))
 
             recs.append(keep)
 
@@ -127,7 +128,8 @@ class Database(Transactor):
         # Save the current collection to "reverse"
         key = self.collection_key
         record_copy = copy.copy(record)
-        self.add_action(lambda: self.set_collection(key).update(iid, record_copy))
+        self.add_action(lambda: self.set_collection(key)
+                                    .update(iid, record_copy))
 
         # If the data is none, assume we're being given keyworded arguments
         if data is None:
@@ -164,7 +166,8 @@ class Database(Transactor):
 
         Returns an array of dicts.
         """
-        return map(lambda r: self._get_record_for(r, include_id), self._find_ids(attr))
+        return map(lambda r: self._get_record_for(r, include_id),
+                   self._find_ids(attr))
 
     def find_one(self, attr, include_id=False):
         """

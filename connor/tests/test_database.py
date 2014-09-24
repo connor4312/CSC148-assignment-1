@@ -34,7 +34,7 @@ class DatabaseTestCase(unittest.TestCase):
         self.db.end_transaction()
 
         self.assertEqual(False, self.db.foos.find_one(id))
-        
+
     def test_finds_against_dict(self):
         item = {'bar': True}
         self.db.foos.add({'asdfdsf': 'asdfdsfs'})

@@ -35,20 +35,14 @@ class Transactor:
         """
         self.transaction_queue.append(action)
 
-    def undo(self, number=1):
+    def undo(self):
         """
         Undoes the given number of transactions. Returns true on success, or
         false on failure (indicating there were no more transactions to undo)
         """
 
-        for n in range(0, number):
-            if len(self.transactions) == 0:
-                return False
-
-            cmd = self.transactions.pop()
-
-            if cmd is not None:
-                for c in cmd:
-                    c()
+        cmd = self.transactions.pop()
+        while len(cmd) > 0:
+            cmd.pop()()
 
         return True
