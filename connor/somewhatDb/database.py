@@ -13,8 +13,8 @@ class Database(Transactor):
         self.current_collection = None
 
     def _dict_matches(self, compare, against):
-        """
-        Checks to see if all the values in "against" are in the comare
+        """ (Database, dict, dict) -> boolean
+        Checks to see if all the values in "against" are in the compare,
         and that they are equal.
         """
         for key, value in against.items():
@@ -24,7 +24,7 @@ class Database(Transactor):
         return True
 
     def _find_ids(self, attr):
-        """
+        """ (Database, string|dict) -> []string
         Attempts to find the given item in the collection. If attr is a
         string, assume it's a UUID. Otherwise, match it against a dict.
         The record must match everything given in the dict. Returns an
@@ -47,6 +47,10 @@ class Database(Transactor):
         return out
 
     def _get_record_for(self, iid, include_id):
+        """ (Database, string, boolean) -> dict
+        Looks up a record by its ID. If include_id is true, then we'll include
+        the id itself in an "iid" property of the dict.
+        """
         record = copy.copy(self.current_collection[iid])
 
         if include_id:
@@ -55,10 +59,13 @@ class Database(Transactor):
         return record
 
     def has_collection(self, name):
+        """ (Database, string) -> boolean
+        Returns whether or not the given collection yet exists.
+        """
         return name in self.data
 
     def set_collection(self, name):
-        """
+        """ (Database, name) -> Database
         Sets a collection from the "database", creating one if it
         does not already exist.
         """
@@ -71,7 +78,7 @@ class Database(Transactor):
         return self
 
     def add(self, data=None, iid=None, **kwargs):
-        """
+        """ (Database, dict|[]dict, string) -> string
         Adds an item to the collection. Takes a dict to add, an array
         of dicts, to add, or data as keyword arguments. Returns an
         array of added IDs.
@@ -98,7 +105,7 @@ class Database(Transactor):
         return iid
 
     def remove(self, attr):
-        """
+        """ (Database, string|dict) -> NoneType
         Removes an item by ID/attribute from the current collection. See
         find() for usage.
         """
@@ -116,7 +123,7 @@ class Database(Transactor):
         key = self.collection_key
 
     def update(self, iid, data=None, **kwargs):
-        """
+        """ (Database, string, dict) -> boolean
         Updates an existing item. Returns false if the record didn't exist,
         true otherwise.
         """
@@ -141,7 +148,7 @@ class Database(Transactor):
         return True
 
     def crupdate(self, attr, data=None):
-        """
+        """ (Database, string|dict, dict) -> string
         If a model with the given attr rules (see find()) is in the collection
         then update it. Otherwise, create it.
         """
@@ -157,7 +164,7 @@ class Database(Transactor):
         return records[0]
 
     def find(self, attr={}, include_id=False):
-        """
+        """ (Database, string|dict, boolean) -> []dict
         Attempts to find the given item in the collection. If attr is a
         string, assume it's a UUID. Otherwise, match it against a dict.
         The record must match everything given in the dict. Example:
@@ -170,7 +177,7 @@ class Database(Transactor):
                    self._find_ids(attr))
 
     def find_one(self, attr, include_id=False):
-        """
+        """ (Database, string|dict, boolean) -> dict
         Same as "find", but returns a single dict or None, rather
         than an array.
         """
@@ -182,7 +189,7 @@ class Database(Transactor):
         return self._get_record_for(data.pop(), include_id)
 
     def __getattr__(self, name):
-        """
+        """ (Database, string) -> object
         Allow pymongo-style collection names. For instance:
 
             db.someCollection.find(42)

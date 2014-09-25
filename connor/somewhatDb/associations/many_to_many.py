@@ -18,13 +18,13 @@ class ManyToMany:
         self.child = child
 
     def db(self):
-        """
+        """ (ManyToMany) -> Database
         Gets the database connection for the relation.
         """
         return getattr(db, self.name)
 
     def _get_relation(self, model):
-        """
+        """ (ManyToMany, Model) -> dict
         Creates a dict linking the parent model to the child.
         """
 
@@ -34,7 +34,7 @@ class ManyToMany:
         }
 
     def attach(self, model):
-        """
+        """ (ManyToMany, Model) -> NoneType
         Attaches the model to this instance's subject.
         """
         if model.get_id() is None:
@@ -43,7 +43,7 @@ class ManyToMany:
         self.db().crupdate(self._get_relation(model))
 
     def detach(self, model):
-        """
+        """ (ManyToMany, Model) -> NoneType
         Detaches the model to this instance's subject.
         """
         if model.get_id() is None:
@@ -52,7 +52,7 @@ class ManyToMany:
         self.db().remove(self._get_relation(model))
 
     def find(self):
-        """
+        """ (ManyToMany) -> []Model
         Finds all owned relations.
         """
         out = []

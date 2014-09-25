@@ -1,24 +1,27 @@
-import re
 from somewhatDb.database import db
+from .errors import RunnerError
+
 
 class Runner():
-
-    command_regexp = re.compile(r'<[a-z_]+>')
 
     def __init__(self):
         self.commands = {}
 
     def _wrap_transact(self, func):
-        def foo(*args, **kwargs):
+        """ (Runner, function) -> function
+        Wraps a function so that a transaction is started
+        and ended "around" it.
+        """
+        def transacted(*args, **kwargs):
             db.start_transaction()
             output = func(*args, **kwargs)
             db.end_transaction()
             return output
 
-        return foo
+        return transacted
 
     def _build_command(self, prefix, transact, func):
-        """
+        """ (Runner, string, boolean, function) -> function
         Add the command to our dict, ready to call! Then, just return it.
         We don't really care about *actually* decorating the method here.
         Just giving some syntactic sugar instead of a huge if/else or
@@ -33,7 +36,7 @@ class Runner():
         return func
 
     def resolve_command(self, input):
-        """
+        """ (Runner, string) -> string|NoneType
         Takes an input string, from the CLI, and attempts to resolve the
         command it matches up to. If a function is found, it is called.
         Otherwise, None is returned.
@@ -42,12 +45,15 @@ class Runner():
             if input.startswith(command):
                 args = input.replace(command, '').strip().split()
 
-                return func(*args)
+                try:
+                    return func(*args)
+                except RunnerError as e:
+                    return 'ERROR: ' + str(e)
 
         return None
 
     def command(self, prefix, transact=False):
-        """
+        """ (Runner, string, boolean) -> function
         Simple method to be used as a decorator, which returns a function
         to build a command. Takes a string prefix as its only argument. Use:
 
@@ -62,7 +68,7 @@ class Runner():
         return lambda func: self._build_command(prefix, transact, func)
 
     def run(self):
-        """
+        """ (Runner) -> NoneType
         Loop to run the CLI input parser.
         """
 
