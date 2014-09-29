@@ -1,4 +1,4 @@
-from ..database import db
+from somewhatDb_database import db
 
 
 class ManyToMany:

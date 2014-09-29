@@ -14,7 +14,7 @@ the actual test cases.
 """
 import unittest
 from sms import runner
-from somewhatDb.database import db
+from somewhatDb_database import db
 
 
 class SmsTestCase(unittest.TestCase):

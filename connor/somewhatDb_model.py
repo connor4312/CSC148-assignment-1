@@ -1,4 +1,4 @@
-from .database import db
+from somewhatDb_database import db
 
 
 class Model:
@@ -19,7 +19,7 @@ class Model:
     def find(cls, attrs):
         """ (Model, string|dict) -> []Model
         Attempts to find models by the given parameter. Returns a
-        list of models. See #database.find for use.
+        list of models_ See #database.find for use.
         """
         return [cls(data) for data in cls.db().find(attrs, True)]
 

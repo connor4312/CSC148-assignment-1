@@ -13,8 +13,8 @@ that does all of the work; you just need to provide
 the actual test cases.
 """
 import unittest
-from somewhatDb.models.course import Course
-from somewhatDb.models.student import Student
+from somewhatDb_models_course import Course
+from somewhatDb_models_student import Student
 
 
 class ModelsTestCase(unittest.TestCase):

@@ -1,4 +1,4 @@
-from .transactor import Transactor
+from somewhatDb_transactor import Transactor
 import uuid
 import copy
 

@@ -20,14 +20,14 @@ on it to fulfill all the given specifications.
 run: Run the main interactive loop.
 """
 
-from cli.runner import Runner
+from cli_runner import Runner
 
-import cli.commands.meta
-import cli.commands.enrolment
+import cli_commands_meta
+import cli_commands_enrolment
 
 runner = Runner()
-cli.commands.meta.link(runner)
-cli.commands.enrolment.link(runner)
+cli_commands_meta.link(runner)
+cli_commands_enrolment.link(runner)
 
 
 if __name__ == '__main__':

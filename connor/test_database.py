@@ -14,7 +14,7 @@ the actual test cases.
 """
 import unittest
 import sys
-from somewhatDb.database import Database
+from somewhatDb_database import Database
 
 
 class DatabaseTestCase(unittest.TestCase):
@@ -58,7 +58,6 @@ class DatabaseTestCase(unittest.TestCase):
         self.db.end_transaction()
 
         self.db.undo()
-        print(self.db.foos.find_one({}))
         self.assertNotEqual(None, self.db.foos.find_one(id))
 
     def test_updates(self):

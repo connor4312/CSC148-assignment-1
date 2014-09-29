@@ -1,5 +1,5 @@
-from somewhatDb.database import db
-from .errors import RunnerError
+from somewhatDb_database import db
+from cli_errors import RunnerError
 
 
 class Runner():

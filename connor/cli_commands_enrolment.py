@@ -1,6 +1,6 @@
-from cli.errors import RunnerError
-from somewhatDb.models.student import Student
-from somewhatDb.models.course import Course
+from cli_errors import RunnerError
+from somewhatDb_models_student import Student
+from somewhatDb_models_course import Course
 
 max_students_for_course = 30
 

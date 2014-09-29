@@ -1,5 +1,5 @@
-from ..model import Model
-from ..associations import ManyToMany
+from somewhatDb_model import Model
+from somewhatDb_associations_manyToMany import ManyToMany
 
 
 class Student(Model):
@@ -7,5 +7,5 @@ class Student(Model):
         super().__init__(*args)
 
         # The import is done here to prevent a circular dependency
-        from .course import Course
+        from somewhatDb_models_course import Course
         self.courses = ManyToMany(self, Course)
