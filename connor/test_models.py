@@ -17,7 +17,7 @@ from somewhatDb_models_course import Course
 from somewhatDb_models_student import Student
 
 
-class ModelsTestCase(unittest.TestCase):
+class ModelsTestCase(unittest.TestCase): # pragma: no cover
 
     def test_creates_finds(self):
         c = Course()
@@ -65,10 +65,10 @@ class ModelsTestCase(unittest.TestCase):
         c = Course()
         c.save()
         s = Student()
-        s.save()
 
         c.students.attach(s)
         self.assertEqual(s.get_id(), c.students.find()[0].get_id())
 
         c.students.detach(s)
         self.assertEqual(0, len(c.students.find()))
+        c.students.detach(Student())

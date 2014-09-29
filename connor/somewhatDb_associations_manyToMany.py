@@ -47,7 +47,7 @@ class ManyToMany:
         Detaches the model to this instance's subject.
         """
         if model.get_id() is None:
-            model.save()
+            return
 
         self.db().remove(self._get_relation(model))
 

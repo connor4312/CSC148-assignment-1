@@ -50,7 +50,7 @@ class Runner():
                 except RunnerError as e:
                     return 'ERROR: ' + str(e)
 
-        return None
+        return 'ERROR: Command not found'
 
     def command(self, prefix, transact=False):
         """ (Runner, string, boolean) -> function
@@ -66,16 +66,3 @@ class Runner():
         """
 
         return lambda func: self._build_command(prefix, transact, func)
-
-    def run(self):
-        """ (Runner) -> NoneType
-        Loop to run the CLI input parser.
-        """
-
-        while True:
-            output = self.resolve_command(input('').strip())
-
-            if output is None:
-                print('Unrecognized command!')
-            else:
-                print(output)

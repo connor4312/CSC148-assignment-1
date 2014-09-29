@@ -31,4 +31,5 @@ cli_commands_enrolment.link(runner)
 
 
 if __name__ == '__main__':
-    runner.run()
+    while True:
+        print(runner.resolve_command(input('').strip()))

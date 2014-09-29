@@ -93,7 +93,7 @@ class Database(Transactor):
 
         # Add the keyword args or data, depending on which we're using.
         if data is None:
-            self.current_collection[iid].append(kwargs)
+            self.current_collection[iid] = kwargs
         else:
             # Copy the data to prevent strange reference issues...
             self.current_collection[iid] = copy.copy(data)

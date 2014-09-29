@@ -17,12 +17,6 @@ class Transactor:
         self.transactions.append(self.transaction_queue)
         self.transaction_queue = []
 
-    def fake_transaction(self):
-        """ (Transactor) -> NoneType
-        Creates a transaction which does nothing when undone.
-        """
-        self.transactions.append(None)
-
     def undo_count(self):
         """ (Transactor) -> NoneType
         Returns the total number of transactions which may be undone.
