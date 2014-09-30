@@ -1,16 +1,7 @@
-# Assignment 1 - Sample unit tests
-#
-# CSC148 Fall 2014, University of Toronto
-# Instructor: David Liu
-# ---------------------------------------------
-"""Sample unit tests for sms.py.
-
-Because we're the code we're testing interacts
-with the console, we need to do a bit of fiddling
-to handle standard input and output.
-Luckily for you, we've provided a base method
-that does all of the work; you just need to provide
-the actual test cases.
+"""
+This TestCase is effectively a set of e2e functional tests for the entire
+application, ensuring that it (hopefully!) operates flawlessly based on the
+requirements of the assignment.
 """
 import unittest
 from sms import runner

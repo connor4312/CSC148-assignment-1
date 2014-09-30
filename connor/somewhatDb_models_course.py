@@ -1,3 +1,7 @@
+"""
+Represents a course that students can take. Contains a many to many relation
+for "students".
+"""
 from somewhatDb_model import Model
 from somewhatDb_associations_manyToMany import ManyToMany
 

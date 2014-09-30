@@ -1,3 +1,8 @@
+"""
+The Model is a basic ORM for SomewhatDb. It implements several common methods,
+such as (static) find and find_one, as well as the ability to set(), get(), and
+save() model attributes. Its ID can be accessed with get_id()
+"""
 from somewhatDb_database import db
 
 

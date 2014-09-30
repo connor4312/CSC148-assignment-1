@@ -11,13 +11,11 @@
 #
 #
 # ---------------------------------------------
-"""Interactive console for assignment.
-
-This module contains the code necessary for running the interactive console.
-As provided, the console does nothing interesting: it is your job to build
-on it to fulfill all the given specifications.
-
-run: Run the main interactive loop.
+"""
+Interactive console. Here is where everything comes together... we create a
+runner and link the meta and enrolment commands to the runner. Finally, if this
+is the main module, we start a loop that accepts console input, dispatches
+it to the runner, and prints the output.
 """
 
 from cli_runner import Runner

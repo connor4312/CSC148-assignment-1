@@ -1,3 +1,15 @@
+"""
+This module's "link" function binds the meta enrolment commands to the test
+runner. By invoking link(Runner), the following commands become available:
+
+    >>> exit
+    exits the sms process
+
+    >>> undo <number=1>
+    reverse the last command or last <number> of commands
+
+See each commands individual docstring for return details.
+"""
 import sys
 from cli_errors import RunnerError
 from somewhatDb_database import db
@@ -9,7 +21,7 @@ def link(runner):
     """
 
     @runner.command('exit')
-    def exit():
+    def exit_loop():
         """ () -> NoneType
         Exits the process. Example usage:
 
@@ -27,16 +39,19 @@ def link(runner):
             > undo 3
         """
 
-        def valueError():
+        def raise_number_error():
+            """ () -> NoneType
+            Raises a "x is not a positive natual number" error.
+            """
             raise RunnerError('%s is not a positive natural number.' % actions)
 
         try:
             actions = int(actions)
         except ValueError:
-            valueError()
+            raise_number_error()
 
         if actions < 0:
-            valueError()
+            raise_number_error()
 
         if db.undo_count() < actions:
             raise RunnerError('No commands to undo.')

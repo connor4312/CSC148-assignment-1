@@ -1,16 +1,6 @@
-# Assignment 1 - Sample unit tests
-#
-# CSC148 Fall 2014, University of Toronto
-# Instructor: David Liu
-# ---------------------------------------------
-"""Sample unit tests for sms.py.
-
-Because we're the code we're testing interacts
-with the console, we need to do a bit of fiddling
-to handle standard input and output.
-Luckily for you, we've provided a base method
-that does all of the work; you just need to provide
-the actual test cases.
+"""
+This TestCase tests the somewhatDb_model.Model and the Many to Many
+relationship, using the Course and Student and fixtures.
 """
 import unittest
 from somewhatDb_models_course import Course

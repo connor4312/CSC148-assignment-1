@@ -1,3 +1,23 @@
+"""
+Represents a many-to-many relationship between a parent instance and a child
+class. It uses a SQL-style pivot table to link the relations. Usage in
+model initializations:
+
+    self.others = ManyToMany(self, OtherModel)
+
+We can then conveniently attach and detach OtherModels to the instance.
+These relations are contained in the pivot table, meaning that they are
+shared between the "parent" and "child" automatically.
+
+    model.others.attach(some_instance)
+    model.others.find() # returns [some_instance]
+    some_instance.models.find() # returns [model]
+
+    some_other_instance.models.detach(model)
+    model.others.find() # returns []
+    some_instance.models.find() # returns []
+
+"""
 from somewhatDb_database import db
 
 

@@ -1,6 +1,26 @@
+"""
+The Database is the persistence layer which powers the application. It stores
+data in dicts (like NoSQL collections), and gives every row a random uuid for
+reference. It extends the Transactor, so any action taken can be rolled back
+easily.
+
+See individual method documentation for further usage.
+"""
 from somewhatDb_transactor import Transactor
 import uuid
 import copy
+
+
+def dict_matches(compare, against):
+    """ (dict, dict) -> boolean
+    Checks to see if all the values in "against" are in the compare,
+    and that they are equal.
+    """
+    for key, value in against.items():
+        if key not in compare or compare[key] != value:
+            return False
+
+    return True
 
 
 class Database(Transactor):
@@ -11,17 +31,6 @@ class Database(Transactor):
         self.data = {}
         self.collection_key = None
         self.current_collection = None
-
-    def _dict_matches(self, compare, against):
-        """ (Database, dict, dict) -> boolean
-        Checks to see if all the values in "against" are in the compare,
-        and that they are equal.
-        """
-        for key, value in against.items():
-            if key not in compare or compare[key] != value:
-                return False
-
-        return True
 
     def _find_ids(self, attr):
         """ (Database, string|dict) -> []string
@@ -41,7 +50,7 @@ class Database(Transactor):
         # Otherwise, it's a dict to match!
         out = []
         for iid, item in self.current_collection.items():
-            if self._dict_matches(item, attr):
+            if dict_matches(item, attr):
                 out.append(iid)
 
         return out
