@@ -1,14 +1,12 @@
 """
 The Database is the persistence layer which powers the application. It stores
-data in dicts (like NoSQL collections), and gives every row a random uuid for
+data in dicts (like NoSQL collections), and gives every row a numeric ID for
 reference. It extends the Transactor, so any action taken can be rolled back
 easily.
 
 See individual method documentation for further usage.
 """
 from somewhatDb_transactor import Transactor
-import uuid
-import copy
 
 
 def dict_matches(compare, against):
@@ -23,6 +21,21 @@ def dict_matches(compare, against):
     return True
 
 
+def copy(dictionary):
+    """ (dict) -> dict
+    Performs a manual deep-copy of a dict. Normally we'd use the copy module,
+    but we can't import that!
+    """
+    output = {}
+    for key, value in dictionary.items():
+        if isinstance(value, dict):
+            output[key] = copy(value)
+        else:
+            output[key] = value
+
+    return output
+
+
 class Database(Transactor):
 
     def __init__(self):
@@ -31,6 +44,7 @@ class Database(Transactor):
         self.data = {}
         self.collection_key = None
         self.current_collection = None
+        self.id_increment = 0
 
     def _find_ids(self, attr):
         """ (Database, string|dict) -> []string
@@ -60,7 +74,7 @@ class Database(Transactor):
         Looks up a record by its ID. If include_id is true, then we'll include
         the id itself in an "iid" property of the dict.
         """
-        record = copy.copy(self.current_collection[iid])
+        record = copy(self.current_collection[iid])
 
         if include_id:
             record['iid'] = iid
@@ -98,14 +112,15 @@ class Database(Transactor):
 
         # Generate a UUID
         if iid is None:
-            iid = uuid.uuid4().hex
+            iid = '%s' % self.id_increment
+            self.id_increment += 1
 
         # Add the keyword args or data, depending on which we're using.
         if data is None:
             self.current_collection[iid] = kwargs
         else:
             # Copy the data to prevent strange reference issues...
-            self.current_collection[iid] = copy.copy(data)
+            self.current_collection[iid] = copy(data)
 
         # Add an undo action
         key = self.collection_key
@@ -143,7 +158,7 @@ class Database(Transactor):
 
         # Save the current collection to "reverse"
         key = self.collection_key
-        record_copy = copy.copy(record)
+        record_copy = copy(record)
         self.add_action(lambda: self.set_collection(key)
                                     .update(iid, record_copy))
 

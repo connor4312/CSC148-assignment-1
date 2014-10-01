@@ -10,7 +10,6 @@ runner. By invoking link(Runner), the following commands become available:
 
 See each commands individual docstring for return details.
 """
-import sys
 from cli_errors import RunnerError
 from somewhatDb_database import db
 
@@ -27,7 +26,7 @@ def link(runner):
 
             > exit
         """
-        sys.exit()
+        raise SystemExit
 
     @runner.command('undo')
     def undo(actions=1):
