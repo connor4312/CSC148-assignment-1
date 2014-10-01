@@ -30,7 +30,11 @@ cli_commands_enrolment.link(runner)
 def run():
     while True:
         try:
-            print(runner.resolve_command(input('').strip()))
+            output = runner.resolve_command(input('').strip())
+            
+            if output is not None:
+                print(output)
+
         except SystemExit:
             break
 

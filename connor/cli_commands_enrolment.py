@@ -52,8 +52,6 @@ def link(runner):
         student.name(name)
         student.save()
 
-        return ''
-
     @runner.command('enrol', transact=True)
     def enrol_student(name, course_name):
         """ (string, string) -> string
@@ -80,8 +78,6 @@ def link(runner):
 
         student.courses.attach(course)
 
-        return ''
-
     @runner.command('drop', transact=True)
     def drop_course(name, course_name):
         """ (string, string) -> string
@@ -100,8 +96,6 @@ def link(runner):
         course = Course.find_one({'name': course_name})
         if course is not None:
             student.courses.detach(course)
-
-        return ''
 
     @runner.command('list-courses')
     def list_courses(name):

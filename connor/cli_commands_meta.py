@@ -58,5 +58,3 @@ def link(runner):
                 db.undo()
         except EmptyStackError:
             raise RunnerError('No commands to undo.')
-
-        return ''
