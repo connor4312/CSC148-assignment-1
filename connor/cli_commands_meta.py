@@ -12,6 +12,7 @@ See each commands individual docstring for return details.
 """
 from cli_errors import RunnerError
 from somewhatDb_database import db
+from stack import EmptyStackError
 
 
 def link(runner):
@@ -52,10 +53,10 @@ def link(runner):
         if actions < 0:
             raise_number_error()
 
-        if db.undo_count() < actions:
+        try:
+            for x in range(actions):
+                db.undo()
+        except EmptyStackError:
             raise RunnerError('No commands to undo.')
-
-        for x in range(actions):
-            db.undo()
 
         return ''

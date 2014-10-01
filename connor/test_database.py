@@ -6,7 +6,7 @@ import unittest
 from somewhatDb_database import Database
 
 
-class DatabaseTestCase(unittest.TestCase): # pragma: no cover
+class DatabaseTestCase(unittest.TestCase):
 
     def setUp(self):
         self.db = Database()

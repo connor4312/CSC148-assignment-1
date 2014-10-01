@@ -49,7 +49,7 @@ def link(runner):
             raise RunnerError('Student %s already exists.' % name)
 
         student = Student()
-        student.set('name', name)
+        student.name(name)
         student.save()
 
         return ''
@@ -72,7 +72,7 @@ def link(runner):
         course = Course.find_one({'name': course_name})
         if course is None:
             course = Course()
-            course.set('name', course_name)
+            course.name(course_name)
             course.save()
 
         if len(course.students.find()) >= MAX_STUDENTS_PER_COURSE:
@@ -117,7 +117,7 @@ def link(runner):
         if student is None:
             raise RunnerError('Student %s does not exist.' % name)
 
-        courses = sorted([c.get('name') for c in student.courses.find()])
+        courses = sorted([c.name() for c in student.courses.find()])
         if len(courses) == 0:
             return '%s is not taking any courses.' % name
 
@@ -138,7 +138,7 @@ def link(runner):
         if course is None:
             return 'No one is taking %s.' % name
 
-        students = [c.get('name') for c in course.students.find()]
+        students = [c.name() for c in course.students.find()]
         if len(students) == 0:
             return 'No one is taking %s.' % name
 
@@ -162,7 +162,7 @@ def link(runner):
             if record is None:
                 error.append('ERROR: Student %s does not exist.' % name)
             else:
-                names = [c.get('name') for c in record.courses.find()]
+                names = [c.name() for c in record.courses.find()]
                 course_sets.append(names)
 
         if len(error):

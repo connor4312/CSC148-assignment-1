@@ -7,7 +7,7 @@ from somewhatDb_models_course import Course
 from somewhatDb_models_student import Student
 
 
-class ModelsTestCase(unittest.TestCase): # pragma: no cover
+class ModelsTestCase(unittest.TestCase):
 
     def test_creates_finds(self):
         c = Course()

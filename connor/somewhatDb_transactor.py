@@ -26,20 +26,6 @@ class Transactor:
         self.stack.push(self.transaction_queue)
         self.transaction_queue = []
 
-    def undo_count(self):
-        """ (Transactor) -> NoneType
-        Returns the total number of transactions which may be undone.
-        """
-        items = []
-
-        while not self.stack.is_empty():
-            items.append(self.stack.pop())
-
-        for item in reversed(items):
-            self.stack.push(item)
-
-        return len(items)
-
     def add_action(self, action):
         """ (Transactor, function) -> NoneType
         Adds an action onto the list of transactions.
@@ -49,7 +35,8 @@ class Transactor:
     def undo(self):
         """ (Transactor) -> NoneType
         Undoes the last set of transactions. Returns true on success, or
-        false on failure (indicating there were no more transactions to undo)
+        false on failure (indicating there were no more transactions to undo).
+        Can throw a stack.EmptyStackError, which should be handled!
         """
         for cmd in reversed(self.stack.pop()):
             cmd()

@@ -9,7 +9,7 @@ from somewhatDb_database import db
 from stack import Stack
 
 
-class SmsTestCase(unittest.TestCase): # pragma: no cover
+class SmsTestCase(unittest.TestCase):
 
     def setUp(self):
         db.data = {}

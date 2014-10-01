@@ -12,6 +12,10 @@
 #
 # ---------------------------------------------
 """
+==============================================================================
+====    Architecture Blurb
+==============================================================================
+
 Yes, this file is empty! This program is fairly modular, and the logic is
 distributed across several files. MarkUs doesn't allow us to submit
 directories, so think of each underscore in
@@ -37,6 +41,19 @@ know or care how data is being stored, the models shouldn't be involved
 in how datastore operations get rolled back, the command resolver should not
 worry about how stdin input will be given, and so on.
 
+==============================================================================
+====    What you're looking for
+==============================================================================
+
+ * Classes:             Everywhere!
+ * Attributes:          somewhatDb_models_*.py
+ * Try/Except block:    cli_runner.py:48-52
+ * Stack ADT:           somewhatDb_transactor.py
+ * Unit tests:          test_*.py
+
+==============================================================================
+====    Code Coverage
+==============================================================================
 
 Test coverage report: (generated with https://pypi.python.org/pypi/coverage)
 
