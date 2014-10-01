@@ -1,7 +1,16 @@
+"""
+Management for a transaction. This is a layer on top of the normal stack ADT,
+and it does interact with the stack using only push(), pop(), and is_empty().
+Its responsiblity is to decorate the stack to allow grouping of multiple events
+and undo functionality, for the database to consume.
+"""
+from stack import Stack
+
+
 class Transactor:
 
     def __init__(self):
-        self.transactions = []
+        self.stack = Stack()
         self.transaction_queue = []
 
     def start_transaction(self):
@@ -14,14 +23,22 @@ class Transactor:
         """ (Transactor) -> NoneType
         Ends the current set of events.
         """
-        self.transactions.append(self.transaction_queue)
+        self.stack.push(self.transaction_queue)
         self.transaction_queue = []
 
     def undo_count(self):
         """ (Transactor) -> NoneType
         Returns the total number of transactions which may be undone.
         """
-        return len(self.transactions)
+        items = []
+
+        while not self.stack.is_empty():
+            items.append(self.stack.pop())
+
+        for item in reversed(items):
+            self.stack.push(item)
+
+        return len(items)
 
     def add_action(self, action):
         """ (Transactor, function) -> NoneType
@@ -34,7 +51,5 @@ class Transactor:
         Undoes the last set of transactions. Returns true on success, or
         false on failure (indicating there were no more transactions to undo)
         """
-
-        cmd = self.transactions.pop()
-        while len(cmd) > 0:
-            cmd.pop()()
+        for cmd in reversed(self.stack.pop()):
+            cmd()

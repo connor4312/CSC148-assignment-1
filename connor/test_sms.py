@@ -6,13 +6,14 @@ requirements of the assignment.
 import unittest
 from sms import runner
 from somewhatDb_database import db
+from stack import Stack
 
 
 class SmsTestCase(unittest.TestCase): # pragma: no cover
 
     def setUp(self):
         db.data = {}
-        db.transactions = []
+        db.stack = Stack()
 
     def test_missing_command(self):
         self.assertEqual(runner.resolve_command(
