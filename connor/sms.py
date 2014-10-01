@@ -27,7 +27,13 @@ runner = Runner()
 cli_commands_meta.link(runner)
 cli_commands_enrolment.link(runner)
 
+def run():
+    while True:
+        try:
+            print(runner.resolve_command(input('').strip()))
+        except SystemExit:
+            break
+
 
 if __name__ == '__main__':
-    while True:
-        print(runner.resolve_command(input('').strip()))
+    run()
