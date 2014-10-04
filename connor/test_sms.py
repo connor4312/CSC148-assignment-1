@@ -22,6 +22,10 @@ class SmsTestCase(unittest.TestCase):
     def test_missing_command(self):
         self.assertEqual(runner.resolve_command(
             'lalalala'), 'Unrecognized command!')
+        self.assertEqual(runner.resolve_command(
+            'create bob'), 'Unrecognized command!')
+        self.assertEqual(runner.resolve_command(
+            'create Student bob'), 'Unrecognized command!')
 
     def test_handles_multiple_spaces(self):
         self.assertEqual(runner.resolve_command(
