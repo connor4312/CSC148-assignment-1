@@ -21,23 +21,23 @@ class SmsTestCase(unittest.TestCase):
 
     def test_creates_student(self):
         self.assertEqual(runner.resolve_command(
-            'create student david'), '')
+            'create student david'), None)
         self.assertEqual(runner.resolve_command(
             'create student david'), 'ERROR: Student david already exists.')
 
     def tests_lists_courses(self):
         self.assertEqual(runner.resolve_command(
-            'create student connor'), '')
+            'create student connor'), None)
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is not taking any courses.')
         self.assertEqual(runner.resolve_command(
-            'enrol connor CSC148'), '')
+            'enrol connor CSC148'), None)
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is taking CSC148')
         self.assertEqual(runner.resolve_command(
-            'enrol connor A'), '')
+            'enrol connor A'), None)
         self.assertEqual(runner.resolve_command(
-            'enrol connor Z'), '')
+            'enrol connor Z'), None)
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is taking A, CSC148, Z')
         self.assertEqual(runner.resolve_command(
@@ -49,12 +49,12 @@ class SmsTestCase(unittest.TestCase):
 
         for i in range(30):
             self.assertEqual(runner.resolve_command(
-                'create student connor%s' % i), '')
+                'create student connor%s' % i), None)
             self.assertEqual(runner.resolve_command(
-                'enrol connor%s CSC148' % i), '')
+                'enrol connor%s CSC148' % i), None)
 
         self.assertEqual(runner.resolve_command(
-            'create student connor30'), '')
+            'create student connor30'), None)
         self.assertEqual(runner.resolve_command(
             'enrol connor30 CSC148'), 'ERROR: Course CSC148 is full.')
         self.assertEqual(runner.resolve_command(
@@ -66,21 +66,21 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'drop foo CSC148'), 'ERROR: Student foo does not exist.')
         self.assertEqual(runner.resolve_command(
-            'create student connor'), '')
+            'create student connor'), None)
         self.assertEqual(runner.resolve_command(
-            'enrol connor CSC148'), '')
+            'enrol connor CSC148'), None)
         self.assertEqual(runner.resolve_command(
-            'drop connor CSC148'), '')
+            'drop connor CSC148'), None)
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is not taking any courses.')
 
     def test_common_courses(self):
         self.assertEqual(runner.resolve_command(
-            'create student foo'), '')
+            'create student foo'), None)
         self.assertEqual(runner.resolve_command(
-            'enrol foo CSC148'), '')
+            'enrol foo CSC148'), None)
         self.assertEqual(runner.resolve_command(
-            'create student bar'), '')
+            'create student bar'), None)
         self.assertEqual(runner.resolve_command(
             'common-courses foo bar'), '')
         self.assertEqual(runner.resolve_command(
@@ -91,17 +91,17 @@ class SmsTestCase(unittest.TestCase):
             'ERROR: Student baz does not exist.')
 
         self.assertEqual(runner.resolve_command(
-            'enrol bar CSC148'), '')
+            'enrol bar CSC148'), None)
         self.assertEqual(runner.resolve_command(
             'common-courses foo bar'), 'CSC148')
         self.assertEqual(runner.resolve_command(
-            'enrol bar A'), '')
+            'enrol bar A'), None)
         self.assertEqual(runner.resolve_command(
-            'enrol bar Z'), '')
+            'enrol bar Z'), None)
         self.assertEqual(runner.resolve_command(
-            'enrol foo A'), '')
+            'enrol foo A'), None)
         self.assertEqual(runner.resolve_command(
-            'enrol foo Z'), '')
+            'enrol foo Z'), None)
         self.assertEqual(runner.resolve_command(
             'common-courses foo bar'), 'A, CSC148, Z')
 
@@ -109,13 +109,13 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'class-list CSC148'), 'No one is taking CSC148.')
         self.assertEqual(runner.resolve_command(
-            'create student foo'), '')
+            'create student foo'), None)
         self.assertEqual(runner.resolve_command(
-            'enrol foo CSC148'), '')
+            'enrol foo CSC148'), None)
         self.assertEqual(runner.resolve_command(
             'class-list CSC148'), 'foo')
         self.assertEqual(runner.resolve_command(
-            'drop foo CSC148'), '')
+            'drop foo CSC148'), None)
         self.assertEqual(runner.resolve_command(
             'class-list CSC148'), 'No one is taking CSC148.')
 
@@ -127,29 +127,29 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'undo -1'), 'ERROR: -1 is not a positive natural number.')
         self.assertEqual(runner.resolve_command(
-            'create student foo'), '')
+            'create student foo'), None)
         self.assertEqual(runner.resolve_command(
-            'enrol foo A'), '')
+            'enrol foo A'), None)
         self.assertEqual(runner.resolve_command(
-            'enrol foo B'), '')
+            'enrol foo B'), None)
         self.assertEqual(runner.resolve_command(
-            'undo'), '')
+            'undo'), None)
         self.assertEqual(runner.resolve_command(
-            'undo'), '')
+            'undo'), None)
         self.assertEqual(runner.resolve_command(
             'list-courses foo'), 'foo is not taking any courses.')
         self.assertEqual(runner.resolve_command(
-            'enrol foo B'), '')
+            'enrol foo B'), None)
         self.assertEqual(runner.resolve_command(
-            'undo 2'), '')
+            'undo 2'), None)
         self.assertEqual(runner.resolve_command(
-            'create student foo'), '')
+            'create student foo'), None)
         self.assertEqual(runner.resolve_command(
-            'enrol foo A'), '')
+            'enrol foo A'), None)
         self.assertEqual(runner.resolve_command(
-            'drop foo A'), '')
+            'drop foo A'), None)
         self.assertEqual(runner.resolve_command(
-            'undo'), '')
+            'undo'), None)
         self.assertEqual(runner.resolve_command(
             'list-courses foo'), 'foo is taking A')
 
