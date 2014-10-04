@@ -242,7 +242,23 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'undo'), None)
         self.assertEqual(runner.resolve_command(
+            'list-courses connor'), 'connor is taking A')
+        self.assertEqual(runner.resolve_command(
             'undo'), None)
+        self.assertEqual(runner.resolve_command(
+            'list-courses connor'), 'connor is not taking any courses.')
+
+    def test_undos_multiple_times_with_int(self):
+        self.assertEqual(runner.resolve_command(
+            'enrol connor A'), None)
+        self.assertEqual(runner.resolve_command(
+            'enrol connor B'), None)
+        self.assertEqual(runner.resolve_command(
+            'undo 1'), None)
+        self.assertEqual(runner.resolve_command(
+            'list-courses connor'), 'connor is taking A')
+        self.assertEqual(runner.resolve_command(
+            'undo 1'), None)
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is not taking any courses.')
 
