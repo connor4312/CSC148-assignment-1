@@ -166,4 +166,4 @@ def link(runner):
         for course_set in course_sets[1:]:
             common_set = common_set.intersection(set(course_set))
 
-        return ', '.join(sorted(list(common_set)))
+        return ', '.join(sorted(list(common_set))) or None

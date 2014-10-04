@@ -82,7 +82,7 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'create student bar'), None)
         self.assertEqual(runner.resolve_command(
-            'common-courses foo bar'), '')
+            'common-courses foo bar'), None)
         self.assertEqual(runner.resolve_command(
             'common-courses foo baz'), 'ERROR: Student baz does not exist.')
         self.assertEqual(runner.resolve_command(
