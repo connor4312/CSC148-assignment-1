@@ -1,5 +1,5 @@
 from somewhatDb_database import db
-from cli_errors import RunnerError
+from cli_errors import RunnerError, RunnerHalterError
 
 
 class Runner():
@@ -14,7 +14,15 @@ class Runner():
         """
         def transacted(*args, **kwargs):
             db.start_transaction()
-            output = func(*args, **kwargs)
+
+            try:
+                output = func(*args, **kwargs)
+            except RunnerHalterError as e:
+                raise e
+            except RunnerError as e:
+                db.end_transaction()
+                raise e
+
             db.end_transaction()
             return output
 
@@ -41,6 +49,10 @@ class Runner():
         command it matches up to. If a function is found, it is called.
         Otherwise, None is returned.
         """
+
+        # Normally I'd use regex for this, but we can't import re :(
+        input = ' '.join(input.split())
+        
         for command, func in self.commands.items():
             if input.startswith(command):
                 args = input.replace(command, '').strip().split()
@@ -48,9 +60,12 @@ class Runner():
                 try:
                     return func(*args)
                 except RunnerError as e:
-                    return 'ERROR: ' + str(e)
+                    if len(str(e)):
+                        return 'ERROR: ' + str(e)
 
-        return 'ERROR: Command not found'
+                    return None
+
+        return 'Unrecognized command!'
 
     def command(self, prefix, transact=False):
         """ (Runner, string, boolean) -> function

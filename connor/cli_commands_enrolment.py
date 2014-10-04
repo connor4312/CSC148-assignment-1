@@ -23,7 +23,7 @@ runner. By invoking link(Runner), the following commands become available:
 See each commands individual docstring for return details.
 """
 
-from cli_errors import RunnerError
+from cli_errors import RunnerError, RunnerHalterError
 from somewhatDb_models_student import Student
 from somewhatDb_models_course import Course
 
@@ -72,6 +72,8 @@ def link(runner):
             course = Course()
             course.name(course_name)
             course.save()
+        elif course.name() in [c.name() for c in student.courses.find()]:
+            raise RunnerHalterError()
 
         if len(course.students.find()) >= MAX_STUDENTS_PER_COURSE:
             raise RunnerError('Course %s is full.' % course_name)
@@ -136,7 +138,7 @@ def link(runner):
         if len(students) == 0:
             return 'No one is taking %s.' % name
 
-        return ', '.join(students)
+        return ', '.join(sorted(students))
 
     @runner.command('common-courses')
     def common_courses(*students):
@@ -166,4 +168,4 @@ def link(runner):
         for course_set in course_sets[1:]:
             common_set = common_set.intersection(set(course_set))
 
-        return ', '.join(sorted(list(common_set))) or None
+        return ', '.join(sorted(list(common_set)))
