@@ -105,6 +105,11 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'list-courses foo29'), 'foo29 is taking CSC148')
 
+    def test_enrols_does_not_cap_on_same_student(self):
+        for i in range(50):
+            self.assertEqual(runner.resolve_command(
+                'enrol george CSC148'), None)
+
     def test_drops_student_no_exist(self):
         self.assertEqual(runner.resolve_command(
             'drop foo CSC148'), 'ERROR: Student foo does not exist.')
