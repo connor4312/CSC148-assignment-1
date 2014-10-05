@@ -244,6 +244,10 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is taking A')
         self.assertEqual(runner.resolve_command(
+            'undo'), None)
+        self.assertEqual(runner.resolve_command(
+            'list-courses connor'), 'connor is taking A')
+        self.assertEqual(runner.resolve_command(
             'undo 2'), None)
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is not taking any courses.')
