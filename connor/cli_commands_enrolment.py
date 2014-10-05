@@ -73,7 +73,7 @@ def link(runner):
             course.name(course_name)
             course.save()
         elif course.name() in [c.name() for c in student.courses.find()]:
-            raise RunnerHalterError()
+            raise RunnerError()
 
         if len(course.students.find()) >= MAX_STUDENTS_PER_COURSE:
             raise RunnerError('Course %s is full.' % course_name)
@@ -99,7 +99,7 @@ def link(runner):
         if course is not None:
             student.courses.detach(course)
 
-    @runner.command('list-courses')
+    @runner.command('list-courses', transact=True)
     def list_courses(name):
         """ (string) -> string
         List the courses taken by a student. Example usage:
@@ -119,7 +119,7 @@ def link(runner):
 
         return '%s is taking %s' % (name, ', '.join(courses))
 
-    @runner.command('class-list')
+    @runner.command('class-list', transact=True)
     def class_list(name):
         """ (string) -> string
         Lists students in a given course. Example usage:
@@ -141,7 +141,7 @@ def link(runner):
         return ', '.join(sorted(students))
 
     @runner.command('common-courses')
-    def common_courses(*students):
+    def common_courses(*students, transact=True):
         """ ([]string) -> string
         Lists the courses the given set of students has in common.
         Example usage:

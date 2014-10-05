@@ -83,7 +83,7 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is taking A')
         self.assertEqual(runner.resolve_command(
-            'undo'), None)
+            'undo 4'), None)
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is not taking any courses.')
 
@@ -244,7 +244,7 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is taking A')
         self.assertEqual(runner.resolve_command(
-            'undo'), None)
+            'undo 2'), None)
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is not taking any courses.')
 
@@ -258,7 +258,7 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is taking A')
         self.assertEqual(runner.resolve_command(
-            'undo 1'), None)
+            'undo 2'), None)
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is not taking any courses.')
 
@@ -278,7 +278,7 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is taking A')
         self.assertEqual(runner.resolve_command(
-            'undo'), None)
+            'undo 2'), None)
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is not taking any courses.')
 
@@ -288,7 +288,7 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'common-courses connor anish'), '')
         self.assertEqual(runner.resolve_command(
-            'undo'), None)
+            'undo 2'), None)
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is not taking any courses.')
 
@@ -298,7 +298,7 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'class-list A'), 'connor')
         self.assertEqual(runner.resolve_command(
-            'undo'), None)
+            'undo 2'), None)
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is not taking any courses.')
 
@@ -308,7 +308,7 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'lalalala'), 'Unrecognized command!')
         self.assertEqual(runner.resolve_command(
-            'undo'), None)
+            'undo 2'), None)
         self.assertEqual(runner.resolve_command(
             'list-courses connor'), 'connor is not taking any courses.')
 
