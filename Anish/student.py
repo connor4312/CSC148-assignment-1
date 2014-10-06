@@ -35,8 +35,7 @@ class StudentManagement(object):
         
         self.studentslog = {}
         self.courselist = {}
-        
-    
+
     def create(self, name):
         try:
             if name not in self.studentslog:
@@ -53,11 +52,7 @@ class StudentManagement(object):
         except KeyError:
             return ('Cannot delete because {} is not in Database.'.format(name))    
             
-    def enrol(self, name, course):
-        #print('s', name)
-        #print(name in self.studentslog)
-        #print(course in self.courselist)
-        
+    def enrol(self, name, course):       
         try:
             if name not in self.studentslog:
                 raise StudentNotExistsError
@@ -65,9 +60,6 @@ class StudentManagement(object):
                  (len(self.courselist[course]) >= 30):
                 raise CourseFullError
             else:
-            #elif course not in self.studentslog[name] and \
-                 #(len(self.courselist[course]) <= 30):            
-            #else:
                 if course not in self.courselist:
                     self.courselist[course] = []                
                 
@@ -80,11 +72,8 @@ class StudentManagement(object):
         except StudentNotExistsError:
             return ('ERROR: Student {0} does not exist.'.format(name))
         except CourseFullError:
-            return ('ERROR: Course {0} is full.'.format(course))
-            
-
-            
-            
+            return ('ERROR: Course {0} is full.'.format(course))         
+         
     def drop(self, name, course):
         try:
             if name not in self.studentslog:
@@ -109,11 +98,8 @@ class StudentManagement(object):
                 for courses in self.studentslog[name]:
                     listcourse.append(courses)
                 listcourse.sort()
-                courses = ', '.join(listcourse)
-                
+                courses = ', '.join(listcourse)                
                 print ('{0} is taking {1}'.format(name, courses))
-            
-                
         except StudentNotExistsError:
             print('ERROR: Student {0} does not exist.'.format(name))        
         
@@ -145,18 +131,12 @@ class StudentManagement(object):
         if course not in self.courselist or len(self.courselist[course]) == 0:
             print ('No one is taking {}.'.format(course))
         else:
+            
             #Make a copy of the students in course(immutable copy)
             studentnames = self.courselist[course][:]
-            #studentnames[0] = '123'
-            #for student in self.courselist[course]:
-                #studentnames.append(student)
             studentnames.sort()
-            #print (1, self.courselist[course])
             print (', '.join(studentnames))
-                
-        
-        
-                
+                 
 #if __name__ == '__main__':
     #a = StudentManagement()
     #a.create('dave')
