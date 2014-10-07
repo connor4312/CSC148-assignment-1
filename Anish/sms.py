@@ -1,3 +1,5 @@
+
+
 # Assignment 1 - Managing students!
 #
 # CSC148 Fall 2014, University of Toronto
@@ -37,15 +39,14 @@ def run():
         if command[0] != 'undo':
             storecommands.push(command)  #Ignore Undo commands
        
-        if command == 'exit':
+        if command[0] == 'exit':
             break
-        
-        elif command == []:  #User input empty string
+        elif command == []:
             commandcheck.push('ERROR: Invalid input')
             print('Unrecognized command!')
-            
         elif len(command) <= 2 and command[0] == 'undo':            
             ntimes = 0
+            #print (command[0:2])
 
             if len(command) == 2:
                 try:
@@ -62,11 +63,13 @@ def run():
             while ntimes != 0:
                 try:
                     ntimes = ntimes - 1
+                    #print (command[0:2])
                     commandpop = storecommands.pop()
                     resultcheck = commandcheck.pop()
 
                     
-                    if commandpop[0] == 'create' and str(resultcheck).split()[0] not in ['ERROR:']:
+                    if commandpop[0:2] == ['create', 'student'] and str(resultcheck).split()[0] not in ['ERROR:']:
+                        #print (command[0:2])
                         database.delete(commandpop[2])
                     elif commandpop[0] == 'enrol' and str(resultcheck).split()[0] not in ['ERROR:', 'Nothing']:
                         database.drop(commandpop[1], commandpop[2])
@@ -79,7 +82,7 @@ def run():
                     print ('ERROR: No commands to undo.')
                     
                         
-        elif len(command) == 3 and command[0] == 'create':
+        elif len(command) == 3 and command[0:2] == ['create', 'student']:
 
             commandcheck.push(database.create(command[2]))
             temp = []
@@ -116,3 +119,4 @@ def run():
 
 if __name__ == '__main__':
     run()
+
