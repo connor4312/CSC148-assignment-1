@@ -52,7 +52,7 @@ class Runner():
 
         # Normally I'd use regex for this, but we can't import re :(
         input = ' '.join(input.split())
-        
+
         for command, func in self.commands.items():
             if input.startswith(command):
                 args = input.replace(command, '').strip().split()

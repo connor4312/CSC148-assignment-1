@@ -14,7 +14,6 @@ class Course(Model):
         from somewhatDb_models_student import Student
         self.students = ManyToMany(self, Student)
 
-
     def name(self, new_name=None):
         """ (string|NoneType) -> string
         Gets the course name or, if passed, updates the course's name to the

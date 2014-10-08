@@ -27,11 +27,12 @@ runner = Runner()
 cli_commands_meta.link(runner)
 cli_commands_enrolment.link(runner)
 
+
 def run():
     while True:
         try:
             output = runner.resolve_command(input('').strip())
-            
+
             if output is not None:
                 print(output)
 
