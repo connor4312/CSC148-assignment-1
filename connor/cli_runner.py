@@ -65,6 +65,10 @@ class Runner():
 
                     return None
 
+        # If it's an invalid command, we still want to push a transaction
+        db.start_transaction()
+        db.end_transaction()
+
         return 'Unrecognized command!'
 
     def command(self, prefix, transact=False):

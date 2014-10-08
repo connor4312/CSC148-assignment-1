@@ -272,21 +272,27 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'drop connor A'), None)
         self.assertEqual(runner.resolve_command(
+            'list-courses connor'), 'connor is not taking any courses.')
+        self.assertEqual(runner.resolve_command(
             'undo 2'), None)
         self.assertEqual(runner.resolve_command(
-            'list-courses connor'), 'connor is not taking any courses.')
+            'list-courses connor'), 'connor is taking A')
 
     def test_undos_works_with_list(self):
         self.assertEqual(runner.resolve_command(
+            'enrol connor B'), None)
+        self.assertEqual(runner.resolve_command(
             'enrol connor A'), None)
         self.assertEqual(runner.resolve_command(
-            'list-courses connor'), 'connor is taking A')
+            'list-courses connor'), 'connor is taking A, B')
         self.assertEqual(runner.resolve_command(
             'undo 2'), None)
         self.assertEqual(runner.resolve_command(
-            'list-courses connor'), 'connor is not taking any courses.')
+            'list-courses connor'), 'connor is taking B')
 
     def test_undos_works_with_common_courses(self):
+        self.assertEqual(runner.resolve_command(
+            'enrol connor B'), None)
         self.assertEqual(runner.resolve_command(
             'enrol connor A'), None)
         self.assertEqual(runner.resolve_command(
@@ -294,9 +300,11 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'undo 2'), None)
         self.assertEqual(runner.resolve_command(
-            'list-courses connor'), 'connor is not taking any courses.')
+            'list-courses connor'), 'connor is taking B')
 
     def test_undos_works_with_class_list(self):
+        self.assertEqual(runner.resolve_command(
+            'enrol connor B'), None)
         self.assertEqual(runner.resolve_command(
             'enrol connor A'), None)
         self.assertEqual(runner.resolve_command(
@@ -304,9 +312,11 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'undo 2'), None)
         self.assertEqual(runner.resolve_command(
-            'list-courses connor'), 'connor is not taking any courses.')
+            'list-courses connor'), 'connor is taking B')
 
     def test_undos_works_with_unrecognized(self):
+        self.assertEqual(runner.resolve_command(
+            'enrol connor B'), None)
         self.assertEqual(runner.resolve_command(
             'enrol connor A'), None)
         self.assertEqual(runner.resolve_command(
@@ -314,7 +324,7 @@ class SmsTestCase(unittest.TestCase):
         self.assertEqual(runner.resolve_command(
             'undo 2'), None)
         self.assertEqual(runner.resolve_command(
-            'list-courses connor'), 'connor is not taking any courses.')
+            'list-courses connor'), 'connor is taking B')
 
     def test_exits(self):
         with self.assertRaises(SystemExit):

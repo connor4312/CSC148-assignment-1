@@ -140,8 +140,8 @@ def link(runner):
 
         return ', '.join(sorted(students))
 
-    @runner.command('common-courses')
-    def common_courses(*students, transact=True):
+    @runner.command('common-courses', transact=True)
+    def common_courses(*students):
         """ ([]string) -> string
         Lists the courses the given set of students has in common.
         Example usage:
