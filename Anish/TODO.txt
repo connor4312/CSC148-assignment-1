@@ -3,3 +3,4 @@
 -Clean Up sms.py
 -Ask TA if OOP marking scheme satisfied
 -Test Cases update
+-Update sms comments
