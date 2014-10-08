@@ -1,5 +1,6 @@
 
 
+
 # Assignment 1 - Managing students!
 #
 # CSC148 Fall 2014, University of Toronto
@@ -43,7 +44,7 @@ def run():
         elif command[0] == 'exit':
             break
         elif len(command) <= 2 and command[0] == 'undo':
-            commandcheck.push('Nothing')
+            storecommands.pop()
             ntimes = 0
             #print (command[0:2])
 
