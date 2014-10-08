@@ -36,15 +36,14 @@ def run():
     while True:
         command = input('').split()
         #command = command.split()
-        if command[0] != 'undo':
-            storecommands.push(command)  #Ignore Undo commands
-       
-        if command[0] == 'exit':
-            break
-        elif command == []:
+        storecommands.push(command)
+        if command == []:
             commandcheck.push('ERROR: Invalid input')
-            print('Unrecognized command!')
-        elif len(command) <= 2 and command[0] == 'undo':            
+            print('Unrecognized command!')        
+        elif command[0] == 'exit':
+            break
+        elif len(command) <= 2 and command[0] == 'undo':
+            commandcheck.push('Nothing')
             ntimes = 0
             #print (command[0:2])
 
