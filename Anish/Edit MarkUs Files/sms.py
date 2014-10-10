@@ -41,9 +41,7 @@ def run():
             try:
                 ntimes = ntimes - 1
                 commandpop = storecommands.pop()
-                print('cmpop',commandpop)
                 resultcheck = commandcheck.pop()
-                print('resultcheck',resultcheck)
                 if (commandpop[0:2] == ['create', 'student'] and 
                     str(resultcheck).split()[0] not in ['ERROR:']):
                     database.delete(commandpop[2])
