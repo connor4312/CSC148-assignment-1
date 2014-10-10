@@ -50,7 +50,7 @@ def link(runner):
         except ValueError:
             raise_number_error()
 
-        if actions < 0:
+        if actions < 1:
             raise_number_error()
 
         try:
