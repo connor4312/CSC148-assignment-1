@@ -23,20 +23,29 @@ from cli_runner import Runner
 import cli_commands_meta
 import cli_commands_enrolment
 
+# Instantiate an instance of the CLI runner and link the commands to it.
 runner = Runner()
 cli_commands_meta.link(runner)
 cli_commands_enrolment.link(runner)
 
 
 def run():
+    """ () -> NoneType
+    If we called run... run forever and ever and ever.
+    """
+
     while True:
         try:
+            # Get input and send it over to the command parser.
             output = runner.resolve_command(input('').strip())
 
+            # If we got some output, print it!
             if output is not None:
                 print(output)
 
         except SystemExit:
+            # Catch a systemexit and break. The autotester wants us to do
+            # it this way, apparently.
             break
 
 

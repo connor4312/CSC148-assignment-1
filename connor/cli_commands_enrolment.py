@@ -45,9 +45,11 @@ def link(runner):
         An error will be raised if the student already exists.
         """
 
+        # If the student already exists, raise an error
         if Student.find_one({'name': name}) is not None:
             raise RunnerError('Student %s already exists.' % name)
 
+        # Otherwise, create a new student and save it.
         student = Student()
         student.name(name)
         student.save()
@@ -63,21 +65,26 @@ def link(runner):
         be raised if the course is full or the student doesn't exist.
         """
 
+        # Make sure the student already exists
         student = Student.find_one({'name': name})
         if student is None:
             raise RunnerError('Student %s does not exist.' % name)
 
+        # If the course doesn't exist, create one.
         course = Course.find_one({'name': course_name})
         if course is None:
             course = Course()
             course.name(course_name)
             course.save()
+        # If the course is already in the student's list of courses, do nothing
         elif course.name() in [c.name() for c in student.courses.find()]:
             raise RunnerError()
 
+        # If the course is full, raise an error
         if len(course.students.find()) >= MAX_STUDENTS_PER_COURSE:
             raise RunnerError('Course %s is full.' % course_name)
 
+        # Otherwise, bind the course and the student.
         student.courses.attach(course)
 
     @runner.command('drop', transact=True)
@@ -91,10 +98,14 @@ def link(runner):
         An error will be raised if the student doesn't exist.
         """
 
+        # Check to make sure the student exists...
         student = Student.find_one({'name': name})
         if student is None:
             raise RunnerError('Student %s does not exist.' % name)
 
+        # If the course does exist, detach it from the student. We don't have
+        # to check if it's attached before detaching it, as no error is raised:
+        # the purpose of the detach function is accomplished regardless.
         course = Course.find_one({'name': course_name})
         if course is not None:
             student.courses.detach(course)
@@ -109,11 +120,14 @@ def link(runner):
         An error will be raised if the student doesn't exist.
         """
 
+        # Check that the student exists
         student = Student.find_one({'name': name})
         if student is None:
             raise RunnerError('Student %s does not exist.' % name)
 
+        # Get a list of names for every course the student takes.
         courses = sorted([c.name() for c in student.courses.find()])
+        # If the student isn't taking courses, say so!
         if len(courses) == 0:
             return '%s is not taking any courses.' % name
 
@@ -130,10 +144,12 @@ def link(runner):
         is taking that particular course.
         """
 
+        # Try to find the course. If it doesn't exist, no one is taking it.
         course = Course.find_one({'name': name})
         if course is None:
             return 'No one is taking %s.' % name
 
+        # Get students in the course.
         students = [c.name() for c in course.students.find()]
         if len(students) == 0:
             return 'No one is taking %s.' % name
@@ -153,17 +169,24 @@ def link(runner):
 
         course_sets = []
         error = []
+        # For every one of the student given in the CLI...
         for name in students:
             record = Student.find_one({'name': name})
+            # If it's not found, message that they don't exist.
             if record is None:
                 error.append('ERROR: Student %s does not exist.' % name)
+            # Otherwise add their course names to the list of set names.
             else:
                 names = [c.name() for c in record.courses.find()]
                 course_sets.append(names)
 
+        # If we did get errors, abort and print em.
         if len(error):
             return '\n'.join(error)
 
+        # Start converting the list of course names to sets. Intersect each
+        # one down the line, so in the end only names which are in every list
+        # will remain.
         common_set = set(course_sets[0])
         for course_set in course_sets[1:]:
             common_set = common_set.intersection(set(course_set))

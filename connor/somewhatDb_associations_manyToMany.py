@@ -45,7 +45,9 @@ class ManyToMany:
 
     def _get_relation(self, model):
         """ (ManyToMany, Model) -> dict
-        Creates a dict linking the parent model to the child.
+        Creates a dict linking the parent model to the child and vice versa.
+        It's a dict with keys being the class' names and the values being
+        the instance's IDs.
         """
 
         return {
@@ -57,15 +59,23 @@ class ManyToMany:
         """ (ManyToMany, Model) -> NoneType
         Attaches the model to this instance's subject.
         """
+
+        # Save the model, if it hasn't already been saved.
         if model.get_id() is None:
             model.save()
 
+        # Crupdate the relationship between the parent and child.
+        # We don't just "create" here, because that could lead to multiple
+        # records being created between two models. That's no good!
         self.db().crupdate(self._get_relation(model))
 
     def detach(self, model):
         """ (ManyToMany, Model) -> NoneType
         Detaches the model to this instance's subject.
         """
+
+        # If the model hasn't been saved, it can't have been attached,
+        # so just return none!
         if model.get_id() is None:
             return
 
@@ -75,8 +85,11 @@ class ManyToMany:
         """ (ManyToMany) -> []Model
         Finds all owned relations.
         """
+
         out = []
+        # Find relations that have the same parent class name as this relation.
         attr = {self.parent.__class__.__name__: self.parent.get_id()}
+        # For every one of them, instantiate a new child model.
         for record in self.db().find(attr):
             out.append(self.child.find_one(record[self.child.__name__]))
 

@@ -9,20 +9,26 @@ class Runner():
 
     def _wrap_transact(self, func):
         """ (Runner, function) -> function
-        Wraps a function so that a transaction is started
-        and ended "around" it.
+        Wraps a function so that a transaction is started and ended "around"
+        it. We handle two exceptions: RunnerError and RunnerHalterError.
         """
         def transacted(*args, **kwargs):
             db.start_transaction()
 
             try:
+                # Try to get the output from the function...
                 output = func(*args, **kwargs)
             except RunnerHalterError as e:
+                # On a halter error, re-raise it but do NOT close
+                # the transaction.
                 raise e
             except RunnerError as e:
+                # On a runner error, end the transaction before raising the
+                # error again to handle it at a higher level.
                 db.end_transaction()
                 raise e
 
+            # If we're all good, end the transaction and return the output!
             db.end_transaction()
             return output
 
@@ -53,22 +59,33 @@ class Runner():
         # Normally I'd use regex for this, but we can't import re :(
         input = ' '.join(input.split())
 
+        # Given an input, look through every command...
         for command, func in self.commands.items():
+            # If the input starts with our lovely command
             if input.startswith(command):
+                # Remove the command part, strip any spaces, and split
+                # the "words" which we'll use as arguments.
                 args = input.replace(command, '').strip().split()
 
                 try:
+                    # Pass the words in as positional arguments to the
+                    # bound function.
                     return func(*args)
                 except RunnerError as e:
+                    # If we got an error and it has a message, print it...
                     if len(str(e)):
                         return 'ERROR: ' + str(e)
 
+                    # If it doesn't have an error, return none
                     return None
 
-        # If it's an invalid command, we still want to push a transaction
+        # At this point, if the command is valid it will have returned
+        # something. If it's an invalid command, we still want to push
+        # a transaction, so do that now...
         db.start_transaction()
         db.end_transaction()
 
+        # And return unknown command
         return 'Unrecognized command!'
 
     def command(self, prefix, transact=False):

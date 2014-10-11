@@ -12,12 +12,18 @@ from somewhatDb_transactor import Transactor
 def dict_matches(compare, against):
     """ (dict, dict) -> boolean
     Checks to see if all the values in "against" are in the compare,
-    and that they are equal.
+    and that they are equal. This was inspired by (but not based on)
+    lodash's _.where comparison: https://lodash.com/docs#where
     """
+
     for key, value in against.items():
+        # For every key in what we're comparing against, if they aren't the
+        # same, the dicts are not equal!
         if key not in compare or compare[key] != value:
             return False
 
+    # Otherwise, everything in against is present and the same in compare,
+    # so return true.
     return True
 
 
@@ -26,10 +32,16 @@ def copy(dictionary):
     Performs a manual deep-copy of a dict. Normally we'd use the copy module,
     but we can't import that!
     """
+
+    # Create a fresh new dict!
     output = {}
     for key, value in dictionary.items():
+        # If the value is another dict, recurse into it.
         if isinstance(value, dict):
             output[key] = copy(value)
+        # Otherwise, just copy over the value. For this assignment we're
+        # not worrying about storing actual objects in the database,
+        # like pymongo can do.
         else:
             output[key] = value
 
@@ -41,9 +53,14 @@ class Database(Transactor):
     def __init__(self):
         Transactor.__init__(self)
 
+        # The data stores all of this database's information, in the format
+        # {collection: {id: {attributes}}}.
         self.data = {}
+        # The key of the current collection
         self.collection_key = None
+        # The data (dict) of the current collection.
         self.current_collection = None
+        # The ID we're currently on creating.
         self.id_increment = 0
 
     def _find_ids(self, attr):
@@ -134,17 +151,16 @@ class Database(Transactor):
         find() for usage.
         """
 
-        recs = []
+        key = self.collection_key
         for iid in self._find_ids(attr):
+            # For every id we want to delete, add a restoration in the
+            # transaction queue.
             keep = self.current_collection[iid]
             self.add_action(lambda iid=iid, keep=keep: self
                             .set_collection(key).add(keep, iid))
 
-            recs.append(keep)
-
+            # Then delete it from the current collection.
             del self.current_collection[iid]
-
-        key = self.collection_key
 
     def update(self, iid, data=None, **kwargs):
         """ (Database, string, dict) -> boolean
@@ -180,9 +196,12 @@ class Database(Transactor):
             data = attr
 
         records = self._find_ids(attr)
+        # If we could not find anything like the data we wanted,
+        # add a new record like it!
         if len(records) == 0:
             return self.add(data)
 
+        # Otherwise, just update the exiting record and return it.
         self.update(records[0], data)
 
         return records[0]
