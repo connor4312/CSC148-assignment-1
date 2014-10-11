@@ -23,7 +23,7 @@ runner. By invoking link(Runner), the following commands become available:
 See each commands individual docstring for return details.
 """
 
-from cli_errors import RunnerError, RunnerHalterError
+from cli_errors import RunnerError
 from somewhatDb_models_student import Student
 from somewhatDb_models_course import Course
 

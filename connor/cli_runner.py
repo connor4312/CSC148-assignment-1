@@ -1,5 +1,5 @@
 from somewhatDb_database import db
-from cli_errors import RunnerError, RunnerHalterError
+from cli_errors import RunnerError
 
 
 class Runner():
@@ -10,7 +10,8 @@ class Runner():
     def _wrap_transact(self, func):
         """ (Runner, function) -> function
         Wraps a function so that a transaction is started and ended "around"
-        it. We handle two exceptions: RunnerError and RunnerHalterError.
+        it. We handle the RunnerError to end the transaction, before raising
+        it again.
         """
         def transacted(*args, **kwargs):
             db.start_transaction()
@@ -18,10 +19,6 @@ class Runner():
             try:
                 # Try to get the output from the function...
                 output = func(*args, **kwargs)
-            except RunnerHalterError as e:
-                # On a halter error, re-raise it but do NOT close
-                # the transaction.
-                raise e
             except RunnerError as e:
                 # On a runner error, end the transaction before raising the
                 # error again to handle it at a higher level.
@@ -78,6 +75,24 @@ class Runner():
 
                     # If it doesn't have an error, return none
                     return None
+                except TypeError as e:
+                    # Catch to see if we errored in giving the wrong
+                    # number of commands to the function. This detects
+                    # messages such as:
+                    #
+                    #   TypeError: create_student() takes 1 positional
+                    #   argument but 2 were given
+                    #
+                    # Normally I'd use reflection/introspection to look
+                    # before leaping, but not being able to import
+                    # standary library modules, this is all I can do :(
+                    if 'positional argument but' in '%s' % e:
+                        # Break the for loop, causing us to drop down and
+                        # and the transaction.
+                        break
+                    else:
+                        # If this is some other kind of TypeError, re-raise it
+                        raise e
 
         # At this point, if the command is valid it will have returned
         # something. If it's an invalid command, we still want to push

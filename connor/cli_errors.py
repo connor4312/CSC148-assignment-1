@@ -9,11 +9,3 @@ class RunnerError(Exception):
     raised in a CLI command.
     """
     pass
-
-
-class RunnerHalterError(RunnerError):
-    """
-    The HalterError, a type of RunnerError will cause the transaction to
-    *not* be ended: the command will not be in the undo stack.
-    """
-    pass
